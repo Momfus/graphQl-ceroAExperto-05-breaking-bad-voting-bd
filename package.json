@@ -1,7 +1,7 @@
 {
   "name": "breaking-bad-voting-graphql",
   "version": "1.0.0",
-  "description": "Hola Mundo con MongoDB en GraphQL",
+  "description": "Breaking Bad Sistema de votaciones en tiempo real con MongoDB en GraphQL",
   "main": "build/server.js",
   "scripts": {
     "start": "node build/server.js",
@@ -16,7 +16,9 @@
   "keywords": [
     "graphql",
     "graphql-curso",
-    "hello-world",
+    "breaking-bad",
+    "subscription",
+    "real-time",
     "mongodb"
   ],
   "author": "Momfus Arboleo <momfus@outlook.com>",
@@ -39,6 +41,7 @@
     "http": "0.0.0",
     "mongodb": "^3.2.7",
     "ncp": "^2.0.0",
+    "subscriptions-transport-ws": "^0.9.17",
     "typescript": "^3.5.2"
   },
   "devDependencies": {
