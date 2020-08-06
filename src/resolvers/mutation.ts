@@ -4,6 +4,18 @@ import { getCharacter, getCharacters, assignVoteId, getVote } from '../lib/datab
 import { Datetime } from '../lib/datetime';
 import { COLLECTIONS } from '../config/constants';
 
+// Obtener todos los personajes
+async function response( status: boolean, message: string, db: any ) {
+
+    return {
+
+        status, // igual qeu hacer status: status (se llama igual el atributo que el argumento)
+        message,
+        characters: await getCharacters( db )
+
+    }
+}
+
 const mutation: IResolvers = {
 
     Mutation: {
@@ -15,13 +27,7 @@ const mutation: IResolvers = {
             
             if( selectCharacter === null || selectCharacter === undefined )  {
 
-                return {
-
-                    status: false,
-                    message: 'El personaje introducido no existe y no puedes votar',
-                    characters: await getCharacters( db )
-
-                }
+                return response(false, 'El personaje introducido no existe y no puedes votar', db);
 
             }
 
@@ -38,27 +44,14 @@ const mutation: IResolvers = {
 
                 // Añadir a la colección el nuevo voto
                 async() => {
-                    return {
-        
-                        status: true,
-                        message: 'El personaje existe y se ha emitido correctamente',
-                        characters: await getCharacters( db )
-        
-                    }
-
+                    return response(true, 'El personaje existe y se ha emitido correctamente', db)
                 }
 
             ).catch(
 
                 // Capturar error
                 async() => {
-                    return {
-        
-                        status: false,
-                        message: 'El voto NO se ha emitido. Prueba de nuevo.',
-                        characters: await getCharacters( db )
-        
-                    }
+                    return response( false, 'El voto NO se ha emitido. Prueba de nuevo.', db );
 
                 }
 
@@ -89,13 +82,7 @@ const mutation: IResolvers = {
             
             if( selectVote === null || selectVote === undefined )  {
 
-                return {
-
-                    status: false,
-                    message: 'El voto introducido no existe y no puedes actualizar',
-                    characters: await getCharacters( db )
-
-                }
+                return response(false, 'El voto introducido no existe y no puedes actualizar', db);
 
             }
 
@@ -110,25 +97,13 @@ const mutation: IResolvers = {
             ).then( // Caso satisfactorio
 
                 async() => {
-                    return {
-
-                        status: true,
-                        message: 'Voto actualizado correctamente',
-                        characters: getCharacters(db)
-
-                    }
+                    return response(true, 'Voto actualizado correctamente', db);
                 }
 
             ).catch( // Caso falso
 
                 async() => {
-                    return {
-
-                        status: false,
-                        message: 'Voto NO actualizado. Prueba de nuevo',
-                        characters: getCharacters(db)
-
-                    }
+                    return response( false, 'Voto NO actualizado. Prueba de nuevo', db );
                 }
 
             )
@@ -142,13 +117,7 @@ const mutation: IResolvers = {
             
             if( selectVote === null || selectVote === undefined )  {
 
-                return {
-
-                    status: false,
-                    message: 'El voto introducido no existe y no puedes borrarlo',
-                    characters: await getCharacters( db )
-
-                }
+                return response( false, 'El voto introducido no existe y no puedes borrarlo', db );
 
             }
 
@@ -158,21 +127,13 @@ const mutation: IResolvers = {
                 .then( // Respuesta satisfactoria
 
                     async() => {
-                        return {
-                            status: true,
-                            message: 'Voto borrado correctamente',
-                            characters: getCharacters( db )
-                        }
+                        return response(true, 'Voto borrado correctamente', db);
                     }
 
                 ).catch( // En caso de error
 
                     async() => {
-                        return {
-                            status: false,
-                            message: 'Voto NO borrado. Inténtelo de nuevo',
-                            characters: getCharacters( db )
-                        }
+                        return response(false, 'Voto NO borrado. Inténtelo de nuevo', db);
                     }
 
                 );
