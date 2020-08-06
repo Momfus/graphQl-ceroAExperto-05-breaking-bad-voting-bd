@@ -5,8 +5,24 @@ type Query {
 
 }
 
+#<<< types >>
 
-# Personajes
+type Mutation  {
+
+  addVote( character: ID! ): ResultOperation!
+  updateVote( id: ID!, character: ID! ): ResultOperation!
+  deleteVote( id: ID! ): ResultOperation!
+
+}
+
+type ResultOperation {
+
+  status: Boolean!
+  message: String!
+  characters: [Character!]!
+
+}
+
 type Character {
 
   id: ID!
