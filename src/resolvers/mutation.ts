@@ -2,7 +2,7 @@
 import { IResolvers } from 'graphql-tools';
 import { getCharacter, getCharacters, assignVoteId, getVote } from '../lib/database-operations';
 import { Datetime } from '../lib/datetime';
-import { COLLECTIONS } from '../config/constants';
+import { COLLECTIONS, CHANGE_VOTES } from '../config/constants';
 
 // Obtener todos los personajes
 async function response( status: boolean, message: string, db: any ) {
@@ -16,11 +16,18 @@ async function response( status: boolean, message: string, db: any ) {
     }
 }
 
+async function sendNotification( pubSub: any, db: any ) {
+
+    // Se decide que evento a publicar para estar pendiente
+    pubSub.publish( CHANGE_VOTES, { changeVotes: await getCharacters(db) } )
+
+}
+
 const mutation: IResolvers = {
 
     Mutation: {
 
-        async addVote( _: void, { character }, { db } ) {
+        async addVote( _: void, { character }, { pubsub, db } ) {
 
             // Comprobar que el personaje existe
             const selectCharacter = await getCharacter( db, character );
@@ -44,6 +51,7 @@ const mutation: IResolvers = {
 
                 // Añadir a la colección el nuevo voto
                 async() => {
+                    sendNotification( pubsub, db )
                     return response(true, 'El personaje existe y se ha emitido correctamente', db)
                 }
 
@@ -60,7 +68,7 @@ const mutation: IResolvers = {
 
         },
 
-        async updateVote( _: void, {id, character }, { db } ) {
+        async updateVote( _: void, {id, character }, { pubsub, db } ) {
 
             // Comprobar que el personaje existe
             const selectCharacter = await getCharacter( db, character );
@@ -97,6 +105,7 @@ const mutation: IResolvers = {
             ).then( // Caso satisfactorio
 
                 async() => {
+                    sendNotification( pubsub, db )
                     return response(true, 'Voto actualizado correctamente', db);
                 }
 
@@ -110,7 +119,7 @@ const mutation: IResolvers = {
 
         },
 
-        async deleteVote( _: void, { id }, { db } ) {
+        async deleteVote( _: void, { id }, { pubsub, db } ) {
 
             // Comprobar que el voto existe
             const selectVote = await getVote( db, id );
@@ -127,6 +136,7 @@ const mutation: IResolvers = {
                 .then( // Respuesta satisfactoria
 
                     async() => {
+                        sendNotification( pubsub, db )
                         return response(true, 'Voto borrado correctamente', db);
                     }
 

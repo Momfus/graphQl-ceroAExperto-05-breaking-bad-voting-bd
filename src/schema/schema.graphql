@@ -15,6 +15,12 @@ type Mutation  {
 
 }
 
+type Subscription {
+
+  changeVotes: [Character!]!
+
+}
+
 type ResultOperation {
 
   status: Boolean!
