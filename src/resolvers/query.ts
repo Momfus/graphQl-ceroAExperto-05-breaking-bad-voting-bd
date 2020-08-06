@@ -1,15 +1,19 @@
 import { IResolvers } from 'graphql-tools';
+import { getCharacters, getCharacter } from '../lib/database-operations';
 
 const query: IResolvers = {
     Query: {
-        hello(): string {
-            return 'Hello world!!';
+        
+        async characters( _: void, __: any, { db } ) { // db sacado de server.ts que esta definido
+
+            return await getCharacters(db);
+
         },
-        helloWithName(_: void, args: any): string {
-            return `Hello ${args.name}!!`;
-        },
-        helloToGraphQLCourse(): string {
-            return 'Hello to GraphQL Course!!';
+
+        async character( _: void,{ id }, { db } ) {
+
+            return await getCharacter(db, id);
+
         }
     }
 };

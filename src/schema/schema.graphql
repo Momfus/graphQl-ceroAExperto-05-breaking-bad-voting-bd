@@ -1,6 +1,21 @@
 type Query {
-    hello: String!
-    helloWithName(name: String!): String!
-    helloToGraphQLCourse: String!
-    list: [String]
+    
+    characters: [Character!]!
+    character( id: ID! ): Character
+
+}
+
+
+# Personajes
+type Character {
+
+  id: ID!
+  name: String!
+  actor: String!
+  description: String!
+  total_episodes: Int!
+  photo: String!
+  votes: Int!
+  url: String!  
+
 }
