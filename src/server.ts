@@ -7,6 +7,9 @@ import { createServer } from 'http';
 import environments from './config/environments';
 import Database from './config/database';
 import expressPlayGround from 'graphql-playground-middleware-express';
+
+import expressPlayground from 'graphql-playground-middleware-express';
+
 if (process.env.NODE_ENV !== 'production') {
     const envs = environments;
     console.log(envs);
@@ -34,6 +37,12 @@ async function init() {
     });
 
     server.applyMiddleware({ app });
+
+    app.use('/', expressPlayGround({ // Para acceder al playground de la api en mongoDbCompass
+
+        endpoint: '/graphql'
+
+    }))
 
     app.use('/', expressPlayGround({
         endpoint: '/graphql'
